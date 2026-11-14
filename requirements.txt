@@ -1,0 +1,5 @@
+﻿flet
+aiohttp
+qrcode
+cryptography
+pillow
