@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Unsigned IPA
         run: |
-          yes | flet build ipa --no-codesign --project "SecureQRShare"
+          yes | flet build ipa --project "SecureQRShare" --flutter-build-args="--no-codesign"
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
