@@ -23,12 +23,23 @@ jobs:
           pip install --upgrade pip
           pip install "flet[all]"
 
-      - name: Build Unsigned IPA
+      - name: Build and Package IPA
         run: |
           yes | flet build ipa --project "SecureQRShare" --flutter-build-args="--no-codesign"
+          mkdir -p output_ipa
+          if ls build/ipa/*.ipa 1> /dev/null 2>&1; then
+            cp build/ipa/*.ipa output_ipa/SecureQRShare.ipa
+          else
+            APP_PATH=$(find build -name "*.app" -type d | head -n 1)
+            echo "Found app bundle at: $APP_PATH"
+            mkdir -p Payload
+            cp -r "$APP_PATH" Payload/
+            zip -r output_ipa/SecureQRShare.ipa Payload
+          fi
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: SecureQRShare-iOS
-          path: build/ipa/*.ipa
+          path: output_ipa/SecureQRShare.ipa
+          if-no-files-found: error
